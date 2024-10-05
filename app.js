@@ -110,3 +110,16 @@ app.get('/turnOffBulbs', (req, res) => {
     });
   }
 });
+
+function getTemperature() {
+  const request = coap.request('coap://sensornetwork.local/temperature');
+  request.end();
+  request.on('response', (res) => {
+    const temperature = res.payload.toString();
+    console.log(`Current temperature: ${temperature}`);
+  });
+}
+app.get('/getTemperatures', (req, res) => {
+  if (!res.body) {
+    res.send({
+      
