@@ -46,3 +46,21 @@ app.put('/setFlag', (req, res) => {
     }
   });
 });
+
+app.post('/addStrategies', (req, res) => {
+  const { strategy_name, description, flag, created_at } = req.body;
+  pool.query(`INSERT INTO strategy (strategy_name, description, flag, created_at) VALUES (?,?,?,?)`, [strategy_name, description, flag, created_at], (error, results) => {
+    if (error) {
+      res.status(500).send('Error adding data to database');
+    } else {
+      res.send(results);
+    }
+  });
+});
+
+app.delete('/delStrategies', (req, res) => {
+  const { strategy_id } = req.body;
+  pool.query(`DELETE FROM strategy WHERE strategy_id =?`, [strategy_id], (error, results) => {
+    if (error) {
+      res.status(500).send('Error deleting data from database');
+    } else {
