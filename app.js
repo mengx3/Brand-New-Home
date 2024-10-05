@@ -64,3 +64,19 @@ app.delete('/delStrategies', (req, res) => {
     if (error) {
       res.status(500).send('Error deleting data from database');
     } else {
+      res.send(results);
+    }
+  });
+});
+
+function turnOnBulb() {
+  http.get('http://smartbulb.local/bulb/on', (res) => {
+    console.log(`Bulb turned on. Status code: ${res.statusCode}`);
+  }).on('error', (e) => {
+    console.error(`Error turning on bulb: ${e.message}`);
+  });
+}
+function turnOffBulb() {
+  http.get('http://smartbulb.local/bulb/off', (res) => {
+    console.log(`Bulb turned off. Status code: ${res.statusCode}`);
+    
