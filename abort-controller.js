@@ -23,3 +23,13 @@ class AbortSignal extends eventTargetShim.EventTarget {
         return aborted;
     }
 }
+eventTargetShim.defineEventAttribute(AbortSignal.prototype, "abort");
+/**
+ * Create an AbortSignal object.
+ */
+function createAbortSignal() {
+    const signal = Object.create(AbortSignal.prototype);
+    eventTargetShim.EventTarget.call(signal);
+    abortedFlags.set(signal, false);
+    return signal;
+}
