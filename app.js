@@ -97,3 +97,16 @@ app.get('/turnOnBulbs', (req, res) => {
   }
 });
 
+app.get('/turnOffBulbs', (req, res) => {
+  if (!res.body) {
+    turnOffBulb()
+    res.send({
+      message: 'Turn off the light bulb and call the node backend turnOffBulb function to turn on the light'
+    });
+  }
+  else {
+    res.send({
+      message: 'Background Error'
+    });
+  }
+});
