@@ -122,4 +122,18 @@ function getTemperature() {
 app.get('/getTemperatures', (req, res) => {
   if (!res.body) {
     res.send({
-      
+      message: 'Use oAP protocol to simulate the transmission of sensor data',
+      num:36
+    });
+  }
+  else {
+    res.send({
+      message: 'Background Error'
+    });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
