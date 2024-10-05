@@ -26,4 +26,23 @@ app.use((req, res, next) => {
   }
 });
 
+app.get('/strategies', (req, res) => {
+  pool.query('SELECT * FROM strategy', (error, results) => {
+    if (error) {
+      res.status(500).send('Error retrieving strategies from database');
+    } else {
+      res.send(results);
+    }
+  });
+});
 
+app.put('/setFlag', (req, res) => {
+  const { strategy_id, flag } = req.body;
+  pool.query(`UPDATE strategy SET flag = ${flag} WHERE strategy_id = ${strategy_id}`, (error, results) => {
+    if (error) {
+      res.status(500).send('Error updating flag in database');
+    } else {
+      res.send(results);
+    }
+  });
+});
