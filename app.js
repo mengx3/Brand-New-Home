@@ -79,4 +79,21 @@ function turnOnBulb() {
 function turnOffBulb() {
   http.get('http://smartbulb.local/bulb/off', (res) => {
     console.log(`Bulb turned off. Status code: ${res.statusCode}`);
-    
+      }).on('error', (e) => {
+    console.error(`Error turning off bulb: ${e.message}`);
+  });
+}
+app.get('/turnOnBulbs', (req, res) => {
+  if (!res.body) {
+    turnOnBulb()
+    res.send({
+      message: 'Turn on the light bulb and call the node backend turnOnBulb function to turn on the light'
+    });
+  }
+  else {
+    res.send({
+      message: 'Background Error'
+    });
+  }
+});
+
