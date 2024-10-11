@@ -33,3 +33,17 @@ function createAbortSignal() {
     abortedFlags.set(signal, false);
     return signal;
 }
+/**
+ * Abort a given signal.
+ */
+function abortSignal(signal) {
+    if (abortedFlags.get(signal) !== false) {
+        return;
+    }
+    abortedFlags.set(signal, true);
+    signal.dispatchEvent({ type: "abort" });
+}
+/**
+ * Aborted flag for each instances.
+ */
+const abortedFlags = new WeakMap();
