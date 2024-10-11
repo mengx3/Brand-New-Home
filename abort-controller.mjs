@@ -12,3 +12,10 @@ class AbortSignal extends EventTarget {
      * Returns `true` if this `AbortSignal`'s `AbortController` has signaled to abort, and `false` otherwise.
      */
     get aborted() {
+        const aborted = abortedFlags.get(this);
+        if (typeof aborted !== "boolean") {
+            throw new TypeError(`Expected 'this' to be an 'AbortSignal' object, but got ${this === null ? "null" : typeof this}`);
+        }
+        return aborted;
+    }
+}
