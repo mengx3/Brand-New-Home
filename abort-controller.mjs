@@ -54,3 +54,20 @@ if (typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol") {
         value: "AbortSignal",
     });
 }
+
+/**
+ * The AbortController.
+ */
+class AbortController {
+    /**
+     * Initialize this controller.
+     */
+    constructor() {
+        signals.set(this, createAbortSignal());
+    }
+    /**
+     * Returns the `AbortSignal` object associated with this object.
+     */
+    get signal() {
+        return getSignal(this);
+    }
