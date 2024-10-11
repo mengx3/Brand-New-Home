@@ -71,3 +71,17 @@ class AbortController {
     get signal() {
         return getSignal(this);
     }
+    /**
+     * Abort and signal to any observers that the associated activity is to be aborted.
+     */
+    abort() {
+        abortSignal(getSignal(this));
+    }
+}
+/**
+ * Associated signals.
+ */
+const signals = new WeakMap();
+/**
+ * Get the associated signal of a given controller.
+ */
