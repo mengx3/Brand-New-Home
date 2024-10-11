@@ -8,3 +8,7 @@ class AbortSignal extends EventTarget {
         super();
         throw new TypeError("AbortSignal cannot be constructed directly");
     }
+    /**
+     * Returns `true` if this `AbortSignal`'s `AbortController` has signaled to abort, and `false` otherwise.
+     */
+    get aborted() {
