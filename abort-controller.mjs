@@ -85,3 +85,10 @@ const signals = new WeakMap();
 /**
  * Get the associated signal of a given controller.
  */
+function getSignal(controller) {
+    const signal = signals.get(controller);
+    if (signal == null) {
+        throw new TypeError(`Expected 'this' to be an 'AbortController' object, but got ${controller === null ? "null" : typeof controller}`);
+    }
+    return signal;
+}
