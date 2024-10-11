@@ -47,3 +47,14 @@ function abortSignal(signal) {
  * Aborted flag for each instances.
  */
 const abortedFlags = new WeakMap();
+// Properties should be enumerable.
+Object.defineProperties(AbortSignal.prototype, {
+    aborted: { enumerable: true },
+});
+// `toString()` should return `"[object AbortSignal]"`
+if (typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol") {
+    Object.defineProperty(AbortSignal.prototype, Symbol.toStringTag, {
+        configurable: true,
+        value: "AbortSignal",
+    });
+}
