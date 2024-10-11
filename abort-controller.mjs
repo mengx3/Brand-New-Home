@@ -19,3 +19,23 @@ class AbortSignal extends EventTarget {
         return aborted;
     }
 }
+defineEventAttribute(AbortSignal.prototype, "abort");
+/**
+ * Create an AbortSignal object.
+ */
+function createAbortSignal() {
+    const signal = Object.create(AbortSignal.prototype);
+    EventTarget.call(signal);
+    abortedFlags.set(signal, false);
+    return signal;
+}
+/**
+ * Abort a given signal.
+ */
+function abortSignal(signal) {
+    if (abortedFlags.get(signal) !== false) {
+        return;
+    }
+    abortedFlags.set(signal, true);
+    signal.dispatchEvent({ type: "abort" });
+}
