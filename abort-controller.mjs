@@ -39,7 +39,6 @@ function abortSignal(signal) {
     abortedFlags.set(signal, true);
     signal.dispatchEvent({ type: "abort" });
 }
-
 /**
  * Aborted flag for each instances.
  */
