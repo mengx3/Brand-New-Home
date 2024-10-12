@@ -41,3 +41,17 @@
     function f(a, b) {
         if ("function" != typeof b && null !== b)
             throw new TypeError("Super expression must either be null or a function");
+        a.prototype = Object.create(b && b.prototype, {
+            constructor: { value: a, writable: !0, configurable: !0 }
+        }),
+        b && h(a, b);
+    }
+
+    function g(a) {
+        return (g = Object.setPrototypeOf
+            ? Object.getPrototypeOf
+            : function (a) {
+                  return a.__proto__ || Object.getPrototypeOf(a);
+              }),
+        g(a);
+    }
