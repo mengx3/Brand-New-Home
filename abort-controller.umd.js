@@ -55,3 +55,33 @@
               }),
         g(a);
     }
+
+    function h(a, b) {
+        return (h = Object.setPrototypeOf ||
+            function (a, b) {
+                return (a.__proto__ = b), a;
+            }),
+        h(a, b);
+    }
+
+    function i(a) {
+        if (void 0 === a)
+            throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+        return a;
+    }
+
+    function j(a, b) {
+        return b && ("object" == typeof b || "function" == typeof b) ? b : i(a);
+    }
+
+    function k(a) {
+        var b = F.get(a);
+        return console.assert(null != b, "'this' is expected an Event object, but got", a), b;
+    }
+
+    function l(a) {
+        return null == a.passiveListener
+            ? void (!a.event.cancelable || ((a.canceled = !0), "function" == typeof a.event.preventDefault && a.event.preventDefault()))
+            : void ("undefined" != typeof console && "function" == typeof console.error && console.error("Unable to preventDefault inside passive event listener invocation.", a.passiveListener));
+    }
+
