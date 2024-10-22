@@ -232,3 +232,21 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         var a = Object.create(K.prototype);
         return B.call(a), L.set(a, !1), a;
     }
+
+   function D(a) {
+        !1 !== L.get(a) || (L.set(a, !0), a.dispatchEvent({ type: "abort" }));
+    }
+
+    function E(a) {
+        var c = N.get(a);
+        if (null == c) throw new TypeError("Expected 'this' to be an 'AbortController' object, but got ".concat(null === a ? "null" : b(a)));
+        return c;
+    }
+
+    var F = new WeakMap(),
+        G = new WeakMap();
+    
+    m.prototype = {
+        get type() {
+                return k(this).event.type;
+        },
