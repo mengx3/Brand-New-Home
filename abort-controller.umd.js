@@ -266,3 +266,20 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         get CAPTURING_PHASE() {
             return 1;
         },
+        get AT_TARGET() {
+            return 2;
+        },
+        get BUBBLING_PHASE() {
+            return 3;
+        },
+        get eventPhase() {
+            return k(this).eventPhase;
+        },
+        stopPropagation: function () {
+            var a = k(this);
+            (a.stopped = !0), "function" == typeof a.event.stopPropagation && a.event.stopPropagation();
+        },
+        stopImmediatePropagation: function () {
+            var a = k(this);
+            (a.stopped = !0), (a.immediateStopped = !0), "function" == typeof a.event.stopImmediatePropagation && a.event.stopImmediatePropagation();
+        },
