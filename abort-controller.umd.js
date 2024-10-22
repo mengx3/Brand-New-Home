@@ -85,3 +85,15 @@
             : void ("undefined" != typeof console && "function" == typeof console.error && console.error("Unable to preventDefault inside passive event listener invocation.", a.passiveListener));
     }
 
+    function m(a, b) {
+        F.set(this, {
+            eventTarget: a,
+            event: b,
+            eventPhase: 2,
+            currentTarget: a,
+            canceled: !1,
+            stopped: !1,
+            immediateStopped: !1,
+            passiveListener: null,
+            timeStamp: b.timeStamp || Date.now()
+        }),
