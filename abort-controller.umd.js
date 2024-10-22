@@ -163,3 +163,15 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
     function t(a, b) {
         k(a).eventPhase = b;
     }
+
+    function u(a, b) {
+        k(a).currentTarget = b;
+    }
+
+    function v(a, b) {
+        k(a).passiveListener = b;
+    }
+
+    function w(a) {
+        return null !== a && "object" === b(a);
+    }
