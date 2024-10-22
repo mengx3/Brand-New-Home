@@ -114,3 +114,14 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             enumerable: !0
         };
     }
+
+    function o(a) {
+        return {
+            value: function () {
+                var b = k(this).event;
+                return b[a].apply(b, arguments);
+            },
+            configurable: !0,
+            enumerable: !0
+        };
+    }
