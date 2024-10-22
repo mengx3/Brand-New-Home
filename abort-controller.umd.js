@@ -144,3 +144,22 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             }
         return c;
     }
+
+ function q(a) {
+        if (null == a || a === Object.prototype) return m;
+        var b = G.get(a);
+        return null == b && ((b = p(q(Object.getPrototypeOf(a)), a)), G.set(a, b)), b;
+    }
+
+    function r(a, b) {
+        var c = q(Object.getPrototypeOf(b));
+        return new c(a, b);
+    }
+
+    function s(a) {
+        return k(a).immediateStopped;
+    }
+
+    function t(a, b) {
+        k(a).eventPhase = b;
+    }
