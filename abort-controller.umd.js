@@ -125,3 +125,22 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             enumerable: !0
         };
     }
+
+    function p(a, b) {
+        function c(b, c) {
+            a.call(this, b, c);
+        }
+
+        var d = Object.keys(b);
+        if (0 === d.length) return a;
+        c.prototype = Object.create(a.prototype, {
+            constructor: { value: c, configurable: !0, writable: !0 }
+        });
+        for (var e, f = 0; f < d.length; ++f)
+            if (((e = d[f]), !(e in a.prototype))) {
+                var g = Object.getOwnPropertyDescriptor(b, e),
+                    h = "function" == typeof g.value;
+                Object.defineProperty(c.prototype, e, h ? o(e) : n(e));
+            }
+        return c;
+    }
