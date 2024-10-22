@@ -191,3 +191,15 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                 }
                 return null;
             },
+            set: function (b) {
+                "function" == typeof b || w(b) || (b = null);
+                for (var c = x(this), d = null, e = c.get(a); null != e; ) 3 === e.listenerType ? (null === d ? (null === e.next ? c.delete(a) : c.set(a, e.next)) : (d.next = e.next)) : (d = e), (e = e.next);
+                if (null !== b) {
+                    var f = { listener: b, listenerType: 3, passive: !1, once: !1, next: null };
+                    null === d ? c.set(a, f) : (d.next = f);
+                }
+            },
+            configurable: !0,
+            enumerable: !0
+        };
+    }
