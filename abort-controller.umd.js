@@ -175,3 +175,19 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
     function w(a) {
         return null !== a && "object" === b(a);
     }
+
+    function x(a) {
+        var b = H.get(a);
+        if (null == b) throw new TypeError("'this' is expected an EventTarget object, but got another value.");
+        return b;
+    }
+
+    function y(a) {
+        return {
+            get: function () {
+                for (var b = x(this), c = b.get(a); null != c; ) {
+                    if (3 === c.listenerType) return c.listener;
+                    c = c.next;
+                }
+                return null;
+            },
