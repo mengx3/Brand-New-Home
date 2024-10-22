@@ -97,3 +97,20 @@
             passiveListener: null,
             timeStamp: b.timeStamp || Date.now()
         }),
+Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
+        for (var c, d = Object.keys(b), e = 0; e < d.length; ++e)
+            (c = d[e]), c in this || Object.defineProperty(this, c, n(c));
+    }
+
+    function n(a) {
+        return {
+            get: function () {
+                return k(this).event[a];
+            },
+            set: function (b) {
+                k(this).event[a] = b;
+            },
+            configurable: !0,
+            enumerable: !0
+        };
+    }
