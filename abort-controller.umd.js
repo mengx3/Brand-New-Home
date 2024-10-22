@@ -203,3 +203,32 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             enumerable: !0
         };
     }
+
+    function z(a, b) {
+        Object.defineProperty(a, "on".concat(b), y(b));
+    }
+
+    function A(a) {
+        function b() {
+            B.call(this);
+        }
+
+        b.prototype = Object.create(B.prototype, { constructor: { value: b, configurable: !0, writable: !0 } });
+        for (var c = 0; c < a.length; ++c) z(b.prototype, a[c]);
+        return b;
+    }
+
+    function B() {
+        if (this instanceof B) return void H.set(this, new Map());
+        if (1 === arguments.length && Array.isArray(arguments[0])) return A(arguments[0]);
+        if (0 < arguments.length) {
+            for (var a = Array(arguments.length), b = 0; b < arguments.length; ++b) a[b] = arguments[b];
+            return A(a);
+        }
+        throw new TypeError("Cannot call a class as a function");
+    }
+
+    function C() {
+        var a = Object.create(K.prototype);
+        return B.call(a), L.set(a, !1), a;
+    }
