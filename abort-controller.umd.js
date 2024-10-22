@@ -283,3 +283,16 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             var a = k(this);
             (a.stopped = !0), (a.immediateStopped = !0), "function" == typeof a.event.stopImmediatePropagation && a.event.stopImmediatePropagation();
         },
+        get bubbles() {
+            return !!k(this).event.bubbles;
+        },
+        get cancelable() {
+            return !!k(this).event.cancelable;
+        },
+        preventDefault: function () {
+            l(k(this));
+        },
+        get defaultPrevented() {
+            return k(this).canceled;
+        },
+        
