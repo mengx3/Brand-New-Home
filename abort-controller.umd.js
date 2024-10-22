@@ -250,3 +250,19 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         get type() {
                 return k(this).event.type;
         },
+        get target() {
+            return k(this).eventTarget;
+        },
+        get currentTarget() {
+            return k(this).currentTarget;
+        },
+        composedPath: function () {
+            var a = k(this).currentTarget;
+            return null == a ? [] : [a];
+        },
+        get NONE() {
+            return 0;
+        },
+        get CAPTURING_PHASE() {
+            return 1;
+        },
