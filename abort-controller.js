@@ -97,3 +97,10 @@ if (typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol") {
     });
 }
 
+exports.AbortController = AbortController;
+exports.AbortSignal = AbortSignal;
+exports.default = AbortController;
+
+module.exports = AbortController
+module.exports.AbortController = module.exports["default"] = AbortController
+module.exports.AbortSignal = AbortSignal
