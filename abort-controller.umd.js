@@ -347,4 +347,4 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                 j.next = h;
             }
         },
-        
+        removeEventListener: function (a, b, c) {
