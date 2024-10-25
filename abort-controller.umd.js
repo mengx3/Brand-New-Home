@@ -295,4 +295,19 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         get defaultPrevented() {
             return k(this).canceled;
         },
-        
+        get composed() {
+            return !!k(this).event.composed;
+        },
+        get timeStamp() {
+            return k(this).timeStamp;
+        },
+        get srcElement() {
+            return k(this).eventTarget;
+        },
+        get cancelBubble() {
+            return k(this).stopped;
+        },
+        set cancelBubble(a) {
+            if (a) {
+                var b = k(this);
+                
