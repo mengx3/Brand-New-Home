@@ -322,3 +322,15 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         initEvent: function () {}
     },
     Object.defineProperty(m.prototype, "constructor", { value: m, configurable: !0, writable: !0 }),
+    "undefined" != typeof window && "undefined" != typeof window.Event && (Object.setPrototypeOf(m.prototype, window.Event.prototype), G.set(window.Event.prototype, m));
+
+    var H = new WeakMap(),
+        I = 1,
+        J = 2;
+
+    B.prototype = {
+        addEventListener: function (a, b, c) {
+            if (null != b) {
+                if ("function" != typeof b && !w(b)) throw new TypeError("'listener' should be a function or an object.");
+                var d = x(this),
+                    e = w(c),
