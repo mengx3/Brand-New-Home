@@ -348,3 +348,8 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             }
         },
         removeEventListener: function (a, b, c) {
+            if (null != b) {
+                for (var d = x(this), e = w(c) ? !!c.capture : !!c, f = e ? I : J, g = null, h = d.get(a); null != h; ) {
+                    if (h.listener === b && h.listenerType === f)
+                        return void (null === g ? (null === h.next ? d.delete(a) : d.set(a, h.next)) : (g.next = h.next));
+                    g = h;
