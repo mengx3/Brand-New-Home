@@ -363,3 +363,22 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                 c = a.type,
                 d = b.get(c);
             if (null == d) return !0;
+            for (var e = r(this, a), f = null; null != d; ) {
+                if (d.once) {
+                    null === f ? (null === d.next ? b.delete(c) : b.set(c, d.next)) : (f.next = d.next);
+                } else {
+                    f = d;
+                }
+                v(e, d.passive ? d.listener : null),
+                "function" == typeof d.listener
+                    ? (function () {
+                          try {
+                              d.listener.call(this, e);
+                          } catch (a) {
+                              "undefined" != typeof console && "function" == typeof console.error && console.error(a);
+                          }
+                      }.bind(this)())
+                    : d.listenerType !== 3 && "function" == typeof d.listener.handleEvent && d.listener.handleEvent(e);
+                if (s(e)) break;
+                d = d.next;
+            }
