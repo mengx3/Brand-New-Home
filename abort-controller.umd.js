@@ -353,3 +353,7 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                     if (h.listener === b && h.listenerType === f)
                         return void (null === g ? (null === h.next ? d.delete(a) : d.set(a, h.next)) : (g.next = h.next));
                     g = h;
+                    h = h.next;
+                }
+            }
+        },
