@@ -357,3 +357,9 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                 }
             }
         },
+        dispatchEvent: function (a) {
+            if (null == a || "string" != typeof a.type) throw new TypeError('"event.type" should be a string.');
+            var b = x(this),
+                c = a.type,
+                d = b.get(c);
+            if (null == d) return !0;
