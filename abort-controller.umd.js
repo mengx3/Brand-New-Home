@@ -334,3 +334,17 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                 if ("function" != typeof b && !w(b)) throw new TypeError("'listener' should be a function or an object.");
                 var d = x(this),
                     e = w(c),
+                    f = e ? !!c.capture : !!c,
+                    g = f ? I : J,
+                    h = { listener: b, listenerType: g, passive: e && !!c.passive, once: e && !!c.once, next: null },
+                    i = d.get(a);
+                if (void 0 === i) return void d.set(a, h);
+                for (var j = null; null != i; ) {
+                    if (i.listener === b && i.listenerType === g) return;
+                    j = i;
+                    i = i.next;
+                }
+                j.next = h;
+            }
+        },
+        
