@@ -382,3 +382,21 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
                 if (s(e)) break;
                 d = d.next;
             }
+            return v(e, null), t(e, 0), u(e, null), !e.defaultPrevented;
+        }
+    },
+    Object.defineProperty(B.prototype, "constructor", { value: B, configurable: !0, writable: !0 }),
+    "undefined" != typeof window && "undefined" != typeof window.EventTarget && Object.setPrototypeOf(B.prototype, window.EventTarget.prototype);
+
+    var K = (function (a) {
+        function d() {
+            var a;
+            throw (c(this, d), (a = j(this, g(d).call(this))), new TypeError("AbortSignal cannot be constructed directly"));
+        }
+
+        return f(d, a),
+        e(d, [
+            {
+                key: "aborted",
+                get: function () {
+                    
