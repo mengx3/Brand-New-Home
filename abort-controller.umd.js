@@ -310,4 +310,15 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         set cancelBubble(a) {
             if (a) {
                 var b = k(this);
-                
+                (b.stopped = !0), "boolean" == typeof b.event.cancelBubble && (b.event.cancelBubble = !0);
+            }
+        },
+        get returnValue() {
+            return !k(this).canceled;
+        },
+        set returnValue(a) {
+            a || l(k(this));
+        },
+        initEvent: function () {}
+    },
+    Object.defineProperty(m.prototype, "constructor", { value: m, configurable: !0, writable: !0 }),
