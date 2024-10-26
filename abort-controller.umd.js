@@ -399,4 +399,12 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
             {
                 key: "aborted",
                 get: function () {
-                    
+                    var a = L.get(this);
+                    if ("boolean" != typeof a)
+                        throw new TypeError("Expected 'this' to be an 'AbortSignal' object, but got ".concat(null === this ? "null" : b(this)));
+                    return a;
+                }
+            }
+        ]),
+        d;
+    })(B);
