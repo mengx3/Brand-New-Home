@@ -420,3 +420,22 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         function a() {
             c(this, a), N.set(this, C());
         }
+    
+        return e(a, [
+            {
+                key: "abort",
+                value: function () {
+                    D(E(this));
+                }
+            },
+            {
+                key: "signal",
+                get: function () {
+                    return E(this);
+                }
+            }
+        ]),
+        a;
+    })();
+
+    var N = new WeakMap();
