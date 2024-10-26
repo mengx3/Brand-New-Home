@@ -438,4 +438,15 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         a;
     })();
 
-    var N = new WeakMap();
+    var N = new WeakMap(); 
+    Object.defineProperties(M.prototype, { signal: { enumerable: !0 }, abort: { enumerable: !0 } }),
+    "function" == typeof Symbol && "symbol" === b(Symbol.toStringTag) && Object.defineProperty(M.prototype, Symbol.toStringTag, { configurable: !0, value: "AbortController" }),
+    (a.AbortController = M),
+    (a.AbortSignal = K),
+    (a.default = M),
+    Object.defineProperty(a, "__esModule", { value: !0 }),
+    "undefined" == typeof module && "undefined" == typeof define && (function () {
+        var O = Function("return this")();
+        "undefined" == typeof O.AbortController && ((O.AbortController = M), (O.AbortSignal = K));
+    })();
+});
