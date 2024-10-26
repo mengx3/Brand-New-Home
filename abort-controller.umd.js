@@ -408,3 +408,15 @@ Object.defineProperty(this, "isTrusted", { value: !1, enumerable: !0 });
         ]),
         d;
     })(B);
+   
+    z(K.prototype, "abort");
+
+    var L = new WeakMap();
+
+    Object.defineProperties(K.prototype, { aborted: { enumerable: !0 } }),
+    "function" == typeof Symbol && "symbol" === b(Symbol.toStringTag) && Object.defineProperty(K.prototype, Symbol.toStringTag, { configurable: !0, value: "AbortSignal" });
+
+    var M = (function () {
+        function a() {
+            c(this, a), N.set(this, C());
+        }
