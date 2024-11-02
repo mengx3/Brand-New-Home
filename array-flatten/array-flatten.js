@@ -26,3 +26,39 @@ function flattenWithDepth (array, result, depth) {
 
   return result
 }
+
+/**
+ * Recursive flatten function. Omitting depth is slightly faster.
+ *
+ * @param  {Array} array
+ * @param  {Array} result
+ * @return {Array}
+ */
+function flattenForever (array, result) {
+  for (var i = 0; i < array.length; i++) {
+    var value = array[i]
+
+    if (Array.isArray(value)) {
+      flattenForever(value, result)
+    } else {
+      result.push(value)
+    }
+  }
+
+  return result
+}
+
+/**
+ * Flatten an array, with the ability to define a depth.
+ *
+ * @param  {Array}  array
+ * @param  {Number} depth
+ * @return {Array}
+ */
+function arrayFlatten (array, depth) {
+  if (depth == null) {
+    return flattenForever(array, [])
+  }
+
+  return flattenWithDepth(array, [], depth)
+}
