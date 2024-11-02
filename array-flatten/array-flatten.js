@@ -147,3 +147,45 @@ Accepts.prototype.langs =
 Accepts.prototype.language =
 Accepts.prototype.languages = function (languages_) {
   var languages = languages_
+
+    // support flattened arguments
+  if (languages && !Array.isArray(languages)) {
+    languages = new Array(arguments.length)
+    for (var i = 0; i < languages.length; i++) {
+      languages[i] = arguments[i]
+    }
+  }
+
+  // no languages, return all requested languages
+  if (!languages || languages.length === 0) {
+    return this.negotiator.languages()
+  }
+
+  return this.negotiator.languages(languages)[0] || false
+}
+
+/**
+ * Convert extnames to mime.
+ *
+ * @param {String} type
+ * @return {String}
+ * @private
+ */
+
+function extToMime (type) {
+  return type.indexOf('/') === -1
+    ? mime.lookup(type)
+    : type
+}
+
+/**
+ * Check if mime is valid.
+ *
+ * @param {String} type
+ * @return {String}
+ * @private
+ */
+
+function validMime (type) {
+  return typeof type === 'string'
+}
