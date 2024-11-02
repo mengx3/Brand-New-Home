@@ -109,3 +109,37 @@ Accepts.prototype.encodings = function (encodings_) {
 
   return this.negotiator.encodings(encodings)[0] || false
 }
+
+
+/**
+ * Return accepted charsets or best fit based on `charsets`.
+ *
+ * Given `Accept-Charset: utf-8, iso-8859-1;q=0.2, utf-7;q=0.5`
+ * an array sorted by quality is returned:
+ *
+ *     ['utf-8', 'utf-7', 'iso-8859-1']
+ *
+ * @param {String|Array} charsets...
+ * @return {String|Array}
+ * @public
+ */
+
+Accepts.prototype.charset =
+Accepts.prototype.charsets = function (charsets_) {
+  var charsets = charsets_
+
+  // support flattened arguments
+  if (charsets && !Array.isArray(charsets)) {
+    charsets = new Array(arguments.length)
+    for (var i = 0; i < charsets.length; i++) {
+      charsets[i] = arguments[i]
+    }
+  }
+
+  // no charsets, return all requested charsets
+  if (!charsets || charsets.length === 0) {
+    return this.negotiator.charsets()
+  }
+
+  return this.negotiator.charsets(charsets)[0] || false
+}
