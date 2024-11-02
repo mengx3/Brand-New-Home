@@ -76,3 +76,36 @@ Accepts.prototype.types = function (types_) {
     ? types[mimes.indexOf(first)]
     : false
 }
+
+/**
+ * Return accepted encodings or best fit based on `encodings`.
+ *
+ * Given `Accept-Encoding: gzip, deflate`
+ * an array sorted by quality is returned:
+ *
+ *     ['gzip', 'deflate']
+ *
+ * @param {String|Array} encodings...
+ * @return {String|Array}
+ * @public
+ */
+
+Accepts.prototype.encoding =
+Accepts.prototype.encodings = function (encodings_) {
+  var encodings = encodings_
+
+  // support flattened arguments
+  if (encodings && !Array.isArray(encodings)) {
+    encodings = new Array(arguments.length)
+    for (var i = 0; i < encodings.length; i++) {
+      encodings[i] = arguments[i]
+    }
+  }
+
+  // no encodings, return all requested encodings
+  if (!encodings || encodings.length === 0) {
+    return this.negotiator.encodings()
+  }
+
+  return this.negotiator.encodings(encodings)[0] || false
+}
