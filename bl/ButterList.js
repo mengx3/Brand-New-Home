@@ -63,3 +63,23 @@ BufferList.prototype.get = function get (index) {
 
   return this._bufs[offset[0]][offset[1]]
 }
+BufferList.prototype.slice = function slice (start, end) {
+  if (typeof start === 'number' && start < 0) {
+    start += this.length
+  }
+
+  if (typeof end === 'number' && end < 0) {
+    end += this.length
+  }
+
+  return this.copy(null, 0, start, end)
+}
+
+BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
+  if (typeof srcStart !== 'number' || srcStart < 0) {
+    srcStart = 0
+  }
+
+  if (typeof srcEnd !== 'number' || srcEnd > this.length) {
+    srcEnd = this.length
+  }
