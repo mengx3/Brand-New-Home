@@ -57,3 +57,28 @@ BufferListStream.prototype._read = function _read (size) {
   this.push(this.slice(0, size))
   this.consume(size)
 }
+
+BufferListStream.prototype.end = function end (chunk) {
+  DuplexStream.prototype.end.call(this, chunk)
+
+  if (this._callback) {
+    this._callback(null, this.slice())
+    this._callback = null
+  }
+}
+
+BufferListStream.prototype._destroy = function _destroy (err, cb) {
+  this._bufs.length = 0
+  this.length = 0
+  cb(err)
+}
+
+BufferListStream.prototype._isBufferList = function _isBufferList (b) {
+  return b instanceof BufferListStream || b instanceof BufferList || BufferListStream.isBufferList(b)
+}
+
+BufferListStream.isBufferList = BufferList.isBufferList
+
+module.exports = BufferListStream
+module.exports.BufferListStream = BufferListStream
+module.exports.BufferList = BufferList
