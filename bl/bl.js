@@ -28,3 +28,32 @@ function BufferListStream (callback) {
 
     callback = null
   }
+
+  BufferList._init.call(this, callback)
+  DuplexStream.call(this)
+}
+
+inherits(BufferListStream, DuplexStream)
+Object.assign(BufferListStream.prototype, BufferList.prototype)
+
+BufferListStream.prototype._new = function _new (callback) {
+  return new BufferListStream(callback)
+}
+
+BufferListStream.prototype._write = function _write (buf, encoding, callback) {
+  this._appendBuffer(buf)
+
+  if (typeof callback === 'function') {
+    callback()
+  }
+}
+
+BufferListStream.prototype._read = function _read (size) {
+  if (!this.length) {
+    return this.push(null)
+  }
+
+  size = Math.min(size, this.length)
+  this.push(this.slice(0, size))
+  this.consume(size)
+}
