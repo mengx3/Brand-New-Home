@@ -41,3 +41,25 @@ BufferList.prototype._offset = function _offset (offset) {
     tot = _t
   }
 }
+
+
+BufferList.prototype._reverseOffset = function (blOffset) {
+  const bufferId = blOffset[0]
+  let offset = blOffset[1]
+
+  for (let i = 0; i < bufferId; i++) {
+    offset += this._bufs[i].length
+  }
+
+  return offset
+}
+
+BufferList.prototype.get = function get (index) {
+  if (index > this.length || index < 0) {
+    return undefined
+  }
+
+  const offset = this._offset(index)
+
+  return this._bufs[offset[0]][offset[1]]
+}
