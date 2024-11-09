@@ -122,6 +122,34 @@ BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
       ? this._bufs[off[0]].copy(dst, dstStart, start, start + bytes)
       : this._bufs[off[0]].slice(start, start + bytes)
   }
+  
+  if (!copy) {
+    // a slice, we need something to copy in to
+    dst = Buffer.allocUnsafe(len)
+  }
 
+  for (let i = off[0]; i < this._bufs.length; i++) {
+    const l = this._bufs[i].length - start
+
+    if (bytes > l) {
+      this._bufs[i].copy(dst, bufoff, start)
+      bufoff += l
+    } else {
+      this._bufs[i].copy(dst, bufoff, start, start + bytes)
+      bufoff += l
+      break
+    }
+
+    bytes -= l
+
+    if (start) {
+      start = 0
+    }
+  }
+
+  // safeguard so that we don't return uninitialized memory
+  if (dst.length > bufoff) return dst.slice(0, bufoff)
+
+  return dst
 
 }
