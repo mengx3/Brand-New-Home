@@ -116,13 +116,14 @@ BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
 
     return dst
   }
+
   // easy, cheap case where it's a subset of one of the buffers
   if (bytes <= this._bufs[off[0]].length - start) {
     return copy
       ? this._bufs[off[0]].copy(dst, dstStart, start, start + bytes)
       : this._bufs[off[0]].slice(start, start + bytes)
   }
-  
+
   if (!copy) {
     // a slice, we need something to copy in to
     dst = Buffer.allocUnsafe(len)
@@ -151,8 +152,8 @@ BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
   if (dst.length > bufoff) return dst.slice(0, bufoff)
 
   return dst
-
 }
+
 BufferList.prototype.shallowSlice = function shallowSlice (start, end) {
   start = start || 0
   end = typeof end !== 'number' ? this.length : end
