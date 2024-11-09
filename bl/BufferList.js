@@ -153,3 +153,14 @@ BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
   return dst
 
 }
+BufferList.prototype.shallowSlice = function shallowSlice (start, end) {
+  start = start || 0
+  end = typeof end !== 'number' ? this.length : end
+
+  if (start < 0) {
+    start += this.length
+  }
+
+  if (end < 0) {
+    end += this.length
+  }
