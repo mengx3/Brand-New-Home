@@ -21,6 +21,7 @@ BufferList._init = function _init (buf) {
     this.append(buf)
   }
 }
+
 BufferList.prototype._new = function _new (buf) {
   return new BufferList(buf)
 }
@@ -51,6 +52,7 @@ BufferList.prototype._reverseOffset = function (blOffset) {
 
   return offset
 }
+
 BufferList.prototype.get = function get (index) {
   if (index > this.length || index < 0) {
     return undefined
@@ -72,3 +74,27 @@ BufferList.prototype.slice = function slice (start, end) {
 
   return this.copy(null, 0, start, end)
 }
+
+BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
+  if (typeof srcStart !== 'number' || srcStart < 0) {
+    srcStart = 0
+  }
+
+  if (typeof srcEnd !== 'number' || srcEnd > this.length) {
+    srcEnd = this.length
+  }
+
+  if (srcStart >= this.length) {
+    return dst || Buffer.alloc(0)
+  }
+
+  if (srcEnd <= 0) {
+    return dst || Buffer.alloc(0)
+  }
+
+  const copy = !!dst
+  const off = this._offset(srcStart)
+  const len = srcEnd - srcStart
+  let bytes = len
+  let bufoff = (copy && dstStart) || 0
+  let start = off[1]
