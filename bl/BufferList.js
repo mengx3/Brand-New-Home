@@ -98,3 +98,58 @@ BufferList.prototype.copy = function copy (dst, dstStart, srcStart, srcEnd) {
   let bytes = len
   let bufoff = (copy && dstStart) || 0
   let start = off[1]
+
+  // copy/slice everything
+  if (srcStart === 0 && srcEnd === this.length) {
+    if (!copy) {
+      // slice, but full concat if multiple buffers
+      return this._bufs.length === 1
+        ? this._bufs[0]
+        : Buffer.concat(this._bufs, this.length)
+    }
+
+    // copy, need to copy individual buffers
+    for (let i = 0; i < this._bufs.length; i++) {
+      this._bufs[i].copy(dst, bufoff)
+      bufoff += this._bufs[i].length
+    }
+
+    return dst
+  }
+  // easy, cheap case where it's a subset of one of the buffers
+  if (bytes <= this._bufs[off[0]].length - start) {
+    return copy
+      ? this._bufs[off[0]].copy(dst, dstStart, start, start + bytes)
+      : this._bufs[off[0]].slice(start, start + bytes)
+  }
+  
+  if (!copy) {
+    // a slice, we need something to copy in to
+    dst = Buffer.allocUnsafe(len)
+  }
+
+  for (let i = off[0]; i < this._bufs.length; i++) {
+    const l = this._bufs[i].length - start
+
+    if (bytes > l) {
+      this._bufs[i].copy(dst, bufoff, start)
+      bufoff += l
+    } else {
+      this._bufs[i].copy(dst, bufoff, start, start + bytes)
+      bufoff += l
+      break
+    }
+
+    bytes -= l
+
+    if (start) {
+      start = 0
+    }
+  }
+
+  // safeguard so that we don't return uninitialized memory
+  if (dst.length > bufoff) return dst.slice(0, bufoff)
+
+  return dst
+
+}
