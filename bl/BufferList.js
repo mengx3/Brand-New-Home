@@ -172,3 +172,26 @@ BufferList.prototype.shallowSlice = function shallowSlice (start, end) {
   const startOffset = this._offset(start)
   const endOffset = this._offset(end)
   const buffers = this._bufs.slice(startOffset[0], endOffset[0] + 1)
+
+  if (endOffset[1] === 0) {
+    buffers.pop()
+  } else {
+    buffers[buffers.length - 1] = buffers[buffers.length - 1].slice(0, endOffset[1])
+  }
+
+  if (startOffset[1] !== 0) {
+    buffers[0] = buffers[0].slice(startOffset[1])
+  }
+
+  return this._new(buffers)
+}
+
+BufferList.prototype.toString = function toString (encoding, start, end) {
+  return this.slice(start, end).toString(encoding)
+}
+
+BufferList.prototype.consume = function consume (bytes) {
+  // first, normalize the argument, in accordance with how Buffer does it
+  bytes = Math.trunc(bytes)
+  // do nothing if not a positive number
+  if (Number.isNaN(bytes) || bytes <= 0) return this
