@@ -155,3 +155,45 @@ function contentstream (req, debug, inflate) {
       type: 'encoding.unsupported'
     })
   }
+
+  switch (encoding) {
+    case 'deflate':
+      stream = zlib.createInflate()
+      debug('inflate body')
+      req.pipe(stream)
+      break
+    case 'gzip':
+      stream = zlib.createGunzip()
+      debug('gunzip body')
+      req.pipe(stream)
+      break
+    case 'identity':
+      stream = req
+      stream.length = length
+      break
+    default:
+      throw createError(415, 'unsupported content encoding "' + encoding + '"', {
+        encoding: encoding,
+        type: 'encoding.unsupported'
+      })
+  }
+
+  return stream
+}
+
+/**
+ * Dump the contents of a request.
+ *
+ * @param {object} req
+ * @param {function} callback
+ * @api private
+ */
+
+function dump (req, callback) {
+  if (onFinished.isFinished(req)) {
+    callback(null)
+  } else {
+    onFinished(req, callback)
+    req.resume()
+  }
+}
