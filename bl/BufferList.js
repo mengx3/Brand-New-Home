@@ -331,3 +331,42 @@ BufferList.prototype.indexOf = function (search, offset, encoding) {
 
   return -1
 }
+
+BufferList.prototype._match = function (offset, search) {
+  if (this.length - offset < search.length) {
+    return false
+  }
+
+  for (let searchOffset = 0; searchOffset < search.length; searchOffset++) {
+    if (this.get(offset + searchOffset) !== search[searchOffset]) {
+      return false
+    }
+  }
+  return true
+}
+
+;(function () {
+  const methods = {
+    readDoubleBE: 8,
+    readDoubleLE: 8,
+    readFloatBE: 4,
+    readFloatLE: 4,
+    readBigInt64BE: 8,
+    readBigInt64LE: 8,
+    readBigUInt64BE: 8,
+    readBigUInt64LE: 8,
+    readInt32BE: 4,
+    readInt32LE: 4,
+    readUInt32BE: 4,
+    readUInt32LE: 4,
+    readInt16BE: 2,
+    readInt16LE: 2,
+    readUInt16BE: 2,
+    readUInt16LE: 2,
+    readInt8: 1,
+    readUInt8: 1,
+    readIntBE: null,
+    readIntLE: null,
+    readUIntBE: null,
+    readUIntLE: null
+  }
