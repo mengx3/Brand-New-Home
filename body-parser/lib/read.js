@@ -98,5 +98,37 @@ function read (req, res, next, parse, debug, options) {
       return
     }
   }
+      // verify
+    if (verify) {
+      try {
+        debug('verify body')
+        verify(req, res, body, encoding)
+      } catch (err) {
+        next(createError(403, err, {
+          body: body,
+          type: err.type || 'entity.verify.failed'
+        }))
+        return
+      }
+    }
+
+    // parse
+    var str = body
+    try {
+      debug('parse body')
+      str = typeof body !== 'string' && encoding !== null
+        ? iconv.decode(body, encoding)
+        : body
+      req.body = parse(str)
+    } catch (err) {
+      next(createError(400, err, {
+        body: str,
+        type: err.type || 'entity.parse.failed'
+      }))
+      return
+    }
+
+    next()
+  })     
 }
 
