@@ -370,3 +370,32 @@ BufferList.prototype._match = function (offset, search) {
     readUIntBE: null,
     readUIntLE: null
   }
+  
+  for (const m in methods) {
+    (function (m) {
+      if (methods[m] === null) {
+        BufferList.prototype[m] = function (offset, byteLength) {
+          return this.slice(offset, offset + byteLength)[m](0, byteLength)
+        }
+      } else {
+        BufferList.prototype[m] = function (offset = 0) {
+          return this.slice(offset, offset + methods[m])[m](0)
+        }
+      }
+    }(m))
+  }
+}())
+
+// Used internally by the class and also as an indicator of this object being
+// a `BufferList`. It's not possible to use `instanceof BufferList` in a browser
+// environment because there could be multiple different copies of the
+// BufferList class and some `BufferList`s might be `BufferList`s.
+BufferList.prototype._isBufferList = function _isBufferList (b) {
+  return b instanceof BufferList || BufferList.isBufferList(b)
+}
+
+BufferList.isBufferList = function isBufferList (b) {
+  return b != null && b[symbol]
+}
+
+module.exports = BufferList
