@@ -132,3 +132,26 @@ function read (req, res, next, parse, debug, options) {
   })     
 }
 
+/**
+ * Get the content stream of the request.
+ *
+ * @param {object} req
+ * @param {function} debug
+ * @param {boolean} [inflate=true]
+ * @return {object}
+ * @api private
+ */
+
+function contentstream (req, debug, inflate) {
+  var encoding = (req.headers['content-encoding'] || 'identity').toLowerCase()
+  var length = req.headers['content-length']
+  var stream
+
+  debug('content-encoding "%s"', encoding)
+
+  if (inflate === false && encoding !== 'identity') {
+    throw createError(415, 'content encoding unsupported', {
+      encoding: encoding,
+      type: 'encoding.unsupported'
+    })
+  }
