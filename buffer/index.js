@@ -1000,3 +1000,26 @@ function asciiSlice (buf, start, end) {
   }
   return ret
 }
+
+function latin1Slice (buf, start, end) {
+  let ret = ''
+  end = Math.min(buf.length, end)
+
+  for (let i = start; i < end; ++i) {
+    ret += String.fromCharCode(buf[i])
+  }
+  return ret
+}
+
+function hexSlice (buf, start, end) {
+  const len = buf.length
+
+  if (!start || start < 0) start = 0
+  if (!end || end < 0 || end > len) end = len
+
+  let out = ''
+  for (let i = start; i < end; ++i) {
+    out += hexSliceLookupTable[buf[i]]
+  }
+  return out
+}
