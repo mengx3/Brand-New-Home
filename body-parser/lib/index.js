@@ -63,3 +63,34 @@ Object.defineProperty(exports, 'text', {
   enumerable: true,
   get: createParserGetter('text')
 })
+
+/**
+ * URL-encoded parser.
+ * @public
+ */
+
+Object.defineProperty(exports, 'urlencoded', {
+  configurable: true,
+  enumerable: true,
+  get: createParserGetter('urlencoded')
+})
+
+/**
+ * Create a middleware to parse json and urlencoded bodies.
+ *
+ * @param {object} [options]
+ * @return {function}
+ * @deprecated
+ * @public
+ */
+
+function bodyParser (options) {
+  // use default type for parsers
+  var opts = Object.create(options || null, {
+    type: {
+      configurable: true,
+      enumerable: true,
+      value: undefined,
+      writable: true
+    }
+  })
