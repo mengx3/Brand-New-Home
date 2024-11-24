@@ -1733,3 +1733,34 @@ if (encoding !== undefined && typeof encoding !== 'string') {
       ? val
       : Buffer.from(val, encoding)
     const len = bytes.length
+if (len === 0) {
+      throw new TypeError('The value "' + val +
+        '" is invalid for argument "value"')
+    }
+    for (i = 0; i < end - start; ++i) {
+      this[i + start] = bytes[i % len]
+    }
+  }
+
+  return this
+}
+
+// CUSTOM ERRORS
+// =============
+
+// Simplified versions from Node, changed for Buffer-only usage
+const errors = {}
+function E (sym, getMessage, Base) {
+  errors[sym] = class NodeError extends Base {
+    constructor () {
+      super()
+
+      Object.defineProperty(this, 'message', {
+        value: getMessage.apply(this, arguments),
+        writable: true,
+        configurable: true
+      })
+
+      // Add the error code to the name to include it in the stack trace.
+      this.name = `${this.name} [${sym}]`
+      // Access the stack to generate the error message including the error code
