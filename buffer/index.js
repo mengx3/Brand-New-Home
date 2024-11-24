@@ -1764,3 +1764,27 @@ function E (sym, getMessage, Base) {
       // Add the error code to the name to include it in the stack trace.
       this.name = `${this.name} [${sym}]`
       // Access the stack to generate the error message including the error code
+ // from the name.
+      this.stack // eslint-disable-line no-unused-expressions
+      // Reset the name to the actual name.
+      delete this.name
+    }
+
+    get code () {
+      return sym
+    }
+
+    set code (value) {
+      Object.defineProperty(this, 'code', {
+        configurable: true,
+        enumerable: true,
+        value,
+        writable: true
+      })
+    }
+
+    toString () {
+      return `${this.name} [${sym}]: ${this.message}`
+    }
+  }
+}
