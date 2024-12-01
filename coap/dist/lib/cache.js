@@ -68,3 +68,24 @@ class BlockCache {
     contains(key) {
         return this._cache.has(key);
     }
+    get(key) {
+        var _a;
+        return (_a = this._cache.get(key)) === null || _a === void 0 ? void 0 : _a.payload;
+    }
+    getWithDefaultInsert(key) {
+        if (key == null) {
+            return this._factory();
+        }
+        const value = this.get(key);
+        if (value != null) {
+            return value;
+        }
+        else {
+            const def = this._factory();
+            this.add(key, def);
+            return def;
+        }
+    }
+}
+exports.default = BlockCache;
+//# sourceMappingURL=cache.js.map
