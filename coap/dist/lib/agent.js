@@ -206,3 +206,61 @@ class Agent extends events_1.EventEmitter {
                 }
             }
         }
+       if (!packet.confirmable && !req.multicast) {
+            this._msgIdToReq.delete(packet.messageId);
+        }
+        // Drop empty messages (ACKs), but process RST
+        if (packet.code === '0.00' && !packet.reset) {
+            return;
+        }
+        const block2Buff = (0, helpers_1.getOption)(packet.options, 'Block2');
+        let block2 = null;
+        // if we got blockwise (2) response
+        if (block2Buff instanceof Buffer) {
+            block2 = (0, helpers_1.parseBlock2)(block2Buff);
+            // check for error
+            if (block2 == null) {
+                req.sender.reset();
+                req.emit('error', new Error('failed to parse block2'));
+                return;
+            }
+        }
+        if (block2 != null) {
+            if (req.multicast) {
+                req = this._convertMulticastToUnicastRequest(req, rsinfo);
+                if (req == null) {
+                    return;
+                }
+            }
+            // accumulate payload
+            req._totalPayload = Buffer.concat([req._totalPayload, packet.payload]);
+            if (block2.more === 1) {
+                // increase message id for next request
+                if (req._packet.messageId != null) {
+                    this._msgIdToReq.delete(req._packet.messageId);
+                }
+                req._packet.messageId = this._nextMessageId();
+                this._msgIdToReq.set(req._packet.messageId, req);
+                // next block2 request
+                const block2Val = (0, helpers_1.createBlock2)({
+                    more: 0,
+                    num: block2.num + 1,
+                    size: block2.size
+                });
+                if (block2Val == null) {
+                    req.sender.reset();
+                    req.emit('error', new Error('failed to create block2'));
+                    return;
+                }
+                req.setOption('Block2', block2Val);
+                req._packet.payload = undefined;
+                req.sender.send((0, coap_packet_1.generate)(req._packet));
+                return;
+            }
+            else {
+                // get full payload
+                packet.payload = req._totalPayload;
+                // clear the payload incase of block2
+                req._totalPayload = Buffer.alloc(0);
+            }
+        }
