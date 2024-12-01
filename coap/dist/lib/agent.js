@@ -161,3 +161,48 @@ class Agent extends events_1.EventEmitter {
                 this._sock.send(buf, 0, buf.length, rsinfo.port, rsinfo.address, ackSent);
             }
         }
+        if (packet.code !== '0.00' && (req._packet.token == null || req._packet.token.length !== packet.token.length || Buffer.compare(req._packet.token, packet.token) !== 0)) {
+            // The tokens don't match, ignore the message since it is a malformed response
+            return;
+        }
+        const block1Buff = (0, helpers_1.getOption)(packet.options, 'Block1');
+        let block1 = null;
+        if (block1Buff instanceof Buffer) {
+            block1 = (0, block_1.parseBlockOption)(block1Buff);
+            // check for error
+            if (block1 == null) {
+                req.sender.reset();
+                req.emit('error', new Error('Failed to parse block1'));
+                return;
+            }
+        }
+        req.sender.reset();
+        if (block1 != null && packet.ack) {
+            // If the client takes too long to respond then the retry sender will send
+            // another packet with the previous messageId, which we've already removed.
+            const segmentedSender = req.segmentedSender;
+            if (segmentedSender != null) {
+                // If there's more to send/receive, then carry on!
+                if (segmentedSender.remaining() > 0) {
+                    if (segmentedSender.isCorrectACK(block1)) {
+                        if (req._packet.messageId != null) {
+                            this._msgIdToReq.delete(req._packet.messageId);
+                        }
+                        req._packet.messageId = this._nextMessageId();
+                        this._msgIdToReq.set(req._packet.messageId, req);
+                        segmentedSender.receiveACK(block1);
+                    }
+                    else {
+                        segmentedSender.resendPreviousPacket();
+                    }
+                    return;
+                }
+                else {
+                    // console.log("Packet received done");
+                    if (req._packet.options != null) {
+                        (0, helpers_1.removeOption)(req._packet.options, 'Block1');
+                    }
+                    delete req.segmentedSender;
+                }
+            }
+        }
