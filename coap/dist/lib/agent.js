@@ -58,3 +58,42 @@ class Agent extends events_1.EventEmitter {
                 this._handle(packet, rsinfo, outSocket);
             }
         });
+        if (this._opts.port != null) {
+            this._sock.bind(this._opts.port);
+        }
+        this._sock.on('error', (err) => {
+            this.emit('error', err);
+        });
+        this._msgIdToReq = new Map();
+        this._tkToReq = new Map();
+        this._tkToMulticastResAddr = new Map();
+        this._lastToken = Math.floor(Math.random() * (maxToken - 1));
+        this._lastMessageId = Math.floor(Math.random() * (maxMessageId - 1));
+        this._msgInFlight = 0;
+        this._requests = 0;
+    }
+    close(done) {
+        if (this._msgIdToReq.size === 0 && this._msgInFlight === 0) {
+            // No requests in flight, close immediately
+            this._doClose(done);
+            return this;
+        }
+        done = done !== null && done !== void 0 ? done : (() => { });
+        this.once('close', done);
+        for (const req of this._msgIdToReq.values()) {
+            this.abort(req);
+        }
+        return this;
+    }
+    _cleanUp() {
+        if (--this._requests !== 0) {
+            return;
+        }
+        if (this._opts.socket == null) {
+            this._closing = true;
+        }
+        if (this._msgInFlight > 0) {
+            return;
+        }
+        this._doClose();
+    }
