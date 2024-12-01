@@ -35,3 +35,36 @@ class BlockCache {
             clearTimeout(timeoutId);
         }
     }
+        reset() {
+        for (const key of this._cache.keys()) {
+            debug('clean-up cache expiry timer, key:', key);
+            this.remove(key);
+        }
+    }
+    /**
+     * @param key
+     * @param payload
+     */
+    add(key, payload) {
+        const entry = this._cache.get(key);
+        if (entry != null) {
+            debug('reuse old cache entry, key:', key);
+            clearTimeout(entry.timeoutId);
+        }
+        else {
+            debug('add payload to cache, key:', key);
+        }
+        // setup new expiry timer
+        const timeoutId = setTimeout(expiry, this._retentionPeriod, this._cache, key);
+        this._cache.set(key, { payload, timeoutId });
+    }
+    remove(key) {
+        if (this.contains(key)) {
+            debug('remove cache entry, key:', key);
+            this.clearTimeout(key);
+        }
+        return this._cache.delete(key);
+    }
+    contains(key) {
+        return this._cache.has(key);
+    }
