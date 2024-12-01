@@ -97,3 +97,67 @@ class Agent extends events_1.EventEmitter {
         }
         this._doClose();
     }
+   _doClose(done) {
+        for (const req of this._msgIdToReq.values()) {
+            req.sender.reset();
+        }
+        if (this._opts.socket != null) {
+            return;
+        }
+        if (this._sock == null) {
+            this.emit('close');
+            return;
+        }
+        this._sock.close(() => {
+            this._sock = null;
+            if (done != null) {
+                done();
+            }
+            this.emit('close');
+        });
+    }
+    _handle(packet, rsinfo, outSocket) {
+        let buf;
+        let response;
+        let req = this._msgIdToReq.get(packet.messageId);
+        const ackSent = (err) => {
+            if (err != null && req != null) {
+                req.emit('error', err);
+            }
+            this._msgInFlight--;
+            if (this._closing && this._msgInFlight === 0) {
+                this._doClose();
+            }
+        };
+        if (req == null) {
+            if (packet.token.length > 0) {
+                req = this._tkToReq.get(packet.token.toString('hex'));
+            }
+            if ((packet.ack || packet.reset) && req == null) {
+                // Nothing to do on unknown or duplicate ACK/RST packet
+                return;
+            }
+            if (req == null) {
+                buf = (0, coap_packet_1.generate)({
+                    code: '0.00',
+                    reset: true,
+                    messageId: packet.messageId
+                });
+                if (this._sock != null) {
+                    this._msgInFlight++;
+                    this._sock.send(buf, 0, buf.length, rsinfo.port, rsinfo.address, ackSent);
+                }
+                return;
+            }
+        }
+        if (packet.confirmable) {
+            buf = (0, coap_packet_1.generate)({
+                code: '0.00',
+                ack: true,
+                messageId: packet.messageId
+            });
+            if (this._sock != null) {
+                this._msgInFlight++;
+                this._sock.send(buf, 0, buf.length, rsinfo.port, rsinfo.address, ackSent);
+            }
+        }
