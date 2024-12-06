@@ -450,3 +450,23 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
             req.on('response', this._cleanUp.bind(this));
             return;
         }
+        // `null` indicates an option value of zero here, encoded with zero length.
+        // Using `null` avoids issues with some devices that cannot process an
+        // option value of 0 that is encoded as a byte containing eight zeros.
+        let observeValue;
+        if (typeof observeParameter === 'number') {
+            observeValue = observeParameter === 0 ? null : observeParameter;
+        }
+        else if (typeof observeParameter === 'string') {
+            observeValue = parseInt(observeParameter);
+        }
+        else if (observeParameter) {
+            observeValue = null;
+        }
+        else {
+            return;
+        }
+        if (observeValue == null || !isNaN(observeValue)) {
+            req.setOption('Observe', observeValue);
+        }
+    }
