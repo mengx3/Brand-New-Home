@@ -317,3 +317,25 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
         crypto.randomBytes(4).copy(buf, 4);
         return buf;
     }
+    _nextMessageId() {
+        if (++this._lastMessageId === maxMessageId) {
+            this._lastMessageId = 0;
+        }
+        return this._lastMessageId;
+    }
+    /**
+     * Entry point for a new client-side request.
+     * @param url The parameters for the request
+     */
+    request(url) {
+        var _a, _b, _c, _d;
+        this._init();
+        const options = (_a = url.options) !== null && _a !== void 0 ? _a : url.headers;
+        const multicastTimeout = url.multicastTimeout != null ? url.multicastTimeout : 20000;
+        const host = (_b = url.hostname) !== null && _b !== void 0 ? _b : url.host;
+        const port = (_c = url.port) !== null && _c !== void 0 ? _c : parameters_1.parameters.coapPort;
+        const req = new outgoing_message_1.default({}, (req, packet) => {
+            var _a, _b;
+            if (url.confirmable !== false) {
+                packet.confirmable = true;
+            }
