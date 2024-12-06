@@ -363,3 +363,24 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
                     this._tkToReq.set(token, req);
                 }
             }
+            if (packet.messageId != null) {
+                this._msgIdToReq.set(packet.messageId, req);
+            }
+            const block1Buff = (0, helpers_1.getOption)(packet.options, 'Block1');
+            if (block1Buff != null) {
+                // Setup for a segmented transmission
+                req.segmentedSender = new segmentation_1.SegmentedTransmission(block1Buff[0], req, packet);
+                req.segmentedSender.sendNext();
+            }
+            else {
+                let buf;
+                try {
+                    buf = (0, coap_packet_1.generate)(packet);
+                }
+                catch (err) {
+                    req.sender.reset();
+                    return req.emit('error', err);
+                }
+                req.sender.send(buf, packet.confirmable === false);
+            }
+        });
