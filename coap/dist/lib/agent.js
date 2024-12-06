@@ -493,3 +493,29 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
             }));
         }
     }
+    _convertMulticastToUnicastRequest(req, rsinfo) {
+        var _a;
+        const unicastReq = this.request(req.url);
+        const unicastAddress = rsinfo.address.split('%')[0];
+        const token = req._packet.token.toString('hex');
+        const addressArray = (_a = this._tkToMulticastResAddr.get(token)) !== null && _a !== void 0 ? _a : [];
+        if (addressArray.includes(unicastAddress)) {
+            return undefined;
+        }
+        unicastReq.url.host = unicastAddress;
+        unicastReq.sender._host = unicastAddress;
+        clearTimeout(unicastReq.multicastTimer);
+        unicastReq.url.multicast = false;
+        req.eventNames().forEach(eventName => {
+            req.listeners(eventName).forEach(listener => {
+                unicastReq.on(eventName, listener);
+            });
+        });
+        addressArray.push(unicastAddress);
+        unicastReq._packet.token = this._nextToken();
+        this._requests++;
+        return unicastReq;
+    }
+}
+exports.default = Agent;
+//# sourceMappingURL=agent.js.map
