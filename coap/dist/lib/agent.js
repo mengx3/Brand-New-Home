@@ -405,3 +405,28 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
         if (url.contentFormat != null) {
             req.setOption('Content-Format', url.contentFormat);
         }
+        req.sender.on('error', req.emit.bind(req, 'error'));
+        req.sender.on('sending', () => {
+            this._msgInFlight++;
+        });
+        req.sender.on('timeout', (err) => {
+            req.emit('timeout', err);
+            this.abort(req);
+        });
+        req.sender.on('sent', () => {
+            if (req.multicast) {
+                return;
+            }
+            this._msgInFlight--;
+            if (this._closing && this._msgInFlight === 0) {
+                this._doClose();
+            }
+        });
+        // Start multicast monitoring timer in case of multicast request
+        if (url.multicast === true) {
+            req.multicastTimer = setTimeout(() => {
+                if (req._packet.token != null) {
+                    const token = req._packet.token.toString('hex');
+                    this._tkToReq.delete(token);
+                    this._tkToMulticastResAddr.delete(token);
+                }
