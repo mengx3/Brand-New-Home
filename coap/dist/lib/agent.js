@@ -264,3 +264,29 @@ class Agent extends events_1.EventEmitter {
                 req._totalPayload = Buffer.alloc(0);
             }
         }
+const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.observe);
+        if (req.response != null) {
+            const response = req.response;
+            if (response.append != null) {
+                // it is an observe request
+                // and we are already streaming
+                return response.append(packet);
+            }
+            else {
+                // TODO There is a previous response but is not an ObserveStream !
+                return;
+            }
+        }
+        else if (block2 != null && packet.token != null && !observe) {
+            this._tkToReq.delete(packet.token.toString('hex'));
+        }
+        else if (!observe && !req.multicast) {
+            // it is not, so delete the token
+            this._tkToReq.delete(packet.token.toString('hex'));
+        }
+        if (observe && packet.code !== '4.04') {
+            response = new observe_read_stream_1.default(packet, rsinfo, outSocket);
+            response.on('close', () => {
+                this._tkToReq.delete(packet.token.toString('hex'));
+                this._cleanUp();
+            });
