@@ -290,3 +290,30 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
                 this._tkToReq.delete(packet.token.toString('hex'));
                 this._cleanUp();
             });
+            response.on('deregister', () => {
+                const deregisterUrl = Object.assign({}, req === null || req === void 0 ? void 0 : req.url);
+                deregisterUrl.observe = 1;
+                deregisterUrl.token = req === null || req === void 0 ? void 0 : req._packet.token;
+                const deregisterReq = this.request(deregisterUrl);
+                // If the request fails, we'll deal with it with a RST message anyway.
+                deregisterReq.on('error', () => { });
+                deregisterReq.end();
+            });
+        }
+        else {
+            response = new incoming_message_1.default(packet, rsinfo, outSocket);
+        }
+        if (!req.multicast) {
+            req.response = response;
+        }
+        req.emit('response', response);
+    }
+    _nextToken() {
+        const buf = Buffer.alloc(8);
+        if (++this._lastToken === maxToken) {
+            this._lastToken = 0;
+        }
+        buf.writeUInt32BE(this._lastToken, 0);
+        crypto.randomBytes(4).copy(buf, 4);
+        return buf;
+    }
