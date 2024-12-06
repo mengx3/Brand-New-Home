@@ -339,3 +339,27 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
             if (url.confirmable !== false) {
                 packet.confirmable = true;
             }
+            // multicast message should be forced non-confirmable
+            if (url.multicast === true) {
+                req.multicast = true;
+                packet.confirmable = false;
+            }
+            if (!((_b = (_a = packet.ack) !== null && _a !== void 0 ? _a : packet.reset) !== null && _b !== void 0 ? _b : false)) {
+                packet.messageId = this._nextMessageId();
+                if ((url.token instanceof Buffer) && (url.token.length > 0)) {
+                    if (url.token.length > 8) {
+                        return req.emit('error', new Error('Token may be no longer than 8 bytes.'));
+                    }
+                    packet.token = url.token;
+                }
+                else {
+                    packet.token = this._nextToken();
+                }
+                const token = packet.token.toString('hex');
+                if (req.multicast) {
+                    this._tkToMulticastResAddr.set(token, []);
+                }
+                if (token != null) {
+                    this._tkToReq.set(token, req);
+                }
+            }
