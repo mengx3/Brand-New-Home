@@ -470,3 +470,26 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
             req.setOption('Observe', observeValue);
         }
     }
+    abort(req) {
+        req.sender.removeAllListeners();
+        req.sender.reset();
+        this._msgInFlight--;
+        this._cleanUp();
+        if (req._packet.messageId != null) {
+            this._msgIdToReq.delete(req._packet.messageId);
+        }
+        if (req._packet.token != null) {
+            this._tkToReq.delete(req._packet.token.toString('hex'));
+        }
+    }
+    urlPropertyToPacketOption(url, req, property, option, separator) {
+        if (url[property] != null) {
+            req.setOption(option, url[property].normalize('NFC').split(separator)
+                .filter((part) => { return part !== ''; })
+                .map((part) => {
+                const buf = Buffer.alloc(Buffer.byteLength(part));
+                buf.write(part);
+                return buf;
+            }));
+        }
+    }
