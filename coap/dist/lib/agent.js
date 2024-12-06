@@ -430,3 +430,23 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
                     this._tkToReq.delete(token);
                     this._tkToMulticastResAddr.delete(token);
                 }
+                if (req._packet.messageId != null) {
+                    this._msgIdToReq.delete(req._packet.messageId);
+                }
+                this._msgInFlight--;
+                if (this._msgInFlight === 0 && this._closing) {
+                    this._doClose();
+                }
+            }, multicastTimeout);
+        }
+        this._setObserveOption(req, req.url);
+        this._requests++;
+        req._totalPayload = Buffer.alloc(0);
+        return req;
+    }
+    _setObserveOption(req, requestParameters) {
+        const observeParameter = requestParameters.observe;
+        if (observeParameter == null || observeParameter === false) {
+            req.on('response', this._cleanUp.bind(this));
+            return;
+        }
