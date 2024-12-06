@@ -384,3 +384,24 @@ const observe = req.url.observe != null && [true, 0, '0'].includes(req.url.obser
                 req.sender.send(buf, packet.confirmable === false);
             }
         });
+        req.sender = new retry_send_1.default(this._sock, port, host, url.retrySend);
+        req.url = url;
+        req.statusCode = (_d = url.method) !== null && _d !== void 0 ? _d : 'GET';
+        this.urlPropertyToPacketOption(url, req, 'pathname', 'Uri-Path', '/');
+        this.urlPropertyToPacketOption(url, req, 'query', 'Uri-Query', '&');
+        if (options != null) {
+            for (const optionName of Object.keys(options)) {
+                if (optionName in options) {
+                    req.setOption(optionName, options[optionName]);
+                }
+            }
+        }
+        if (url.proxyUri != null) {
+            req.setOption('Proxy-Uri', url.proxyUri);
+        }
+        if (url.accept != null) {
+            req.setOption('Accept', url.accept);
+        }
+        if (url.contentFormat != null) {
+            req.setOption('Content-Format', url.contentFormat);
+        }
