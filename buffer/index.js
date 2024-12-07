@@ -1589,7 +1589,6 @@ Buffer.prototype.writeBigInt64BE = defineBigIntMethod(function writeBigInt64BE (
   return wrtBigUInt64BE(this, value, offset, -BigInt('0x8000000000000000'), BigInt('0x7fffffffffffffff'))
 })
 
-
 function checkIEEE754 (buf, value, offset, ext, max, min) {
   if (offset + ext > buf.length) throw new RangeError('Index out of range')
   if (offset < 0) throw new RangeError('Index out of range')
@@ -1662,8 +1661,7 @@ Buffer.prototype.copy = function copy (target, targetStart, start, end) {
   if (this === target && typeof Uint8Array.prototype.copyWithin === 'function') {
     // Use built-in when available, missing from IE11
     this.copyWithin(targetStart, start, end)
-  } 
-else {
+  } else {
     Uint8Array.prototype.set.call(
       target,
       this.subarray(start, end),
@@ -1689,7 +1687,7 @@ Buffer.prototype.fill = function fill (val, start, end, encoding) {
       encoding = end
       end = this.length
     }
-if (encoding !== undefined && typeof encoding !== 'string') {
+    if (encoding !== undefined && typeof encoding !== 'string') {
       throw new TypeError('encoding must be a string')
     }
     if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
@@ -1733,7 +1731,7 @@ if (encoding !== undefined && typeof encoding !== 'string') {
       ? val
       : Buffer.from(val, encoding)
     const len = bytes.length
-if (len === 0) {
+    if (len === 0) {
       throw new TypeError('The value "' + val +
         '" is invalid for argument "value"')
     }
@@ -1764,7 +1762,7 @@ function E (sym, getMessage, Base) {
       // Add the error code to the name to include it in the stack trace.
       this.name = `${this.name} [${sym}]`
       // Access the stack to generate the error message including the error code
- // from the name.
+      // from the name.
       this.stack // eslint-disable-line no-unused-expressions
       // Reset the name to the actual name.
       delete this.name
@@ -1788,3 +1786,4 @@ function E (sym, getMessage, Base) {
     }
   }
 }
+
